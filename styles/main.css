@@ -1,0 +1,12 @@
+header {
+    text-align: center;
+    border: 3px solid purple;
+}
+
+main {
+    text-align: center;
+    border: 3px solid purple;
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
