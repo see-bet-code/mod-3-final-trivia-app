@@ -154,7 +154,7 @@ function questionDataToObj(questionData) {
     answersForm.append(submitBtn)
     answersDiv.append(answersForm)
     answersForm.addEventListener('submit', function(e) {
-        gameCycle(e, question, questionData, submitBtn)
+        gameCycle(e, question, questionData)
     })
 
 }
