@@ -5,8 +5,9 @@ const BASE_URL = 'http://localhost:3000/api/v1'
 const SESSIONS_URL = `${BASE_URL}/sessions`
 const USERS_URL = `${BASE_URL}/users`
 
-let current_user = null
-let current_session = null
+let currentUser = null
+let currentSession = null
+let gamePoints = 0
 
 function initialize(categorySelection, difficultySelection) {
     fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
@@ -159,17 +160,17 @@ function questionDataToObj(questionData) {
     answersForm.append(submitBtn)
     answersDiv.append(answersForm)
     answersForm.addEventListener('submit', function(e) {
-        gameCycle(e, question.correct_answer, questionData, submitBtn)
+        gameCycle(e, question, questionData, submitBtn)
     })
 
 }
 
-function gameCycle(e, answer, data) {
+function gameCycle(e, question, data) {
     e.preventDefault()
-    console.log(answer)
-    if (e.target.answer.value === answer) {
+    console.log(question.correct_answer)
+    if (e.target.answer.value === question.correct_answer) {
         console.log('Correct!')
-        correctAnswerTally++
+        updateGamePoints(question.difficulty)
     } else {
         console.log('Wrong!')
     }
@@ -177,7 +178,6 @@ function gameCycle(e, answer, data) {
         index++
         questionNumber++
         questionDataToObj(data)
-        // update user points
         // update graphics to show right answer???
     } else {
         console.log("finished!")
@@ -187,6 +187,19 @@ function gameCycle(e, answer, data) {
 }
 
 let correctAnswerTally = 0
+function updateGamePoints(difficulty) {
+    correctAnswerTally++
+    switch(difficulty) {
+        case "easy":
+            gamePoints += 5
+            break;
+        case "medium":
+            gamePoints += 10
+            break;
+        case "hard":
+            gamePoints += 15
+    }
+}
 
 const finalScoreParent = document.querySelector(".final")
 function renderFinalScore() {
@@ -196,8 +209,8 @@ function renderFinalScore() {
     <h1>Game Complete!</h1>
     <h2>Let's See How You Did.</h2>
     <h3>Looks like you got ${correctAnswerTally}/10 of the questions correct</h3>
-    <h3>You've received data points for the Game</h3>
-    <button class="paly-another-button" >Play Another Game of Trivia</button><button class="log-out-button" >Log Out</button>
+    <h3>You've received ${gamePoints} for the Game</h3>
+    <button class="paly-another-button" >Play Another Game of Trivia</button>
     `
     finalScoreParent.append(finalScoreCard)
     const playAnother = document.querySelector(".paly-another-button")
@@ -205,7 +218,16 @@ function renderFinalScore() {
         finalScoreParent.innerHTML = ''
         renderCatAndDif()
     })
-    
+
+    resetGame()
+
+}
+
+function resetGame() {
+    gamePoints = 0
+    index = 0
+    questionNumber = 1
+    correctAnswerTally = 0
 }
 
 
@@ -247,7 +269,7 @@ function switchToLogout() {
     logoutBtn.style.display = "initial"
     logoutBtn.addEventListener('click', function(e) {
         e.preventDefault()
-        fetch(`${BASE_URL}/sessions/${current_user.id}`, {
+        fetch(`${BASE_URL}/sessions/${currentUser.id}`, {
             method: 'delete'
         })
         .then(r => r.json())
@@ -281,8 +303,8 @@ function login(e){
         if (o.status === 401) {
             throw Error(o.message)
         } else {
-            current_user = o.user
-            current_session = o
+            currentUser = o.user
+            currentSession = o
             switchToLogout()
         } 
     })
