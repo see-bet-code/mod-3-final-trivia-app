@@ -8,18 +8,14 @@ const USERS_URL = `${BASE_URL}/users`
 let currentUser = null
 let currentSession = null
 let gamePoints = 0
+let index = 0
+let questionNumber = 1
 
 function initialize(categorySelection, difficultySelection) {
     fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
     .then(response => response.json())
-    .then(questionData => questionDataToObj(questionData));
+    .then(questionDataToObj);
 }
-
-// function randomInitialize(randomCategory) {
-//     fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(randomCategory)}&type=multiple`)
-//     .then(response => response.json())
-//     .then(questionData => questionDataToObj(questionData));
-// }
 
 // find parent for main
 const catAndDif = document.querySelector(".cat-and-dif")
@@ -106,8 +102,6 @@ return array;
 
 questionParent = document.querySelector(".questions")
 
-let index = 0
-let questionNumber = 1
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -201,8 +195,31 @@ function updateGamePoints(difficulty) {
     }
 }
 
+function updateUserLifetimePoints() {
+    let lifetimePoints = 0
+    if (currentUser.points) {
+        lifetimePoints = currentUser.points
+    }
+    console.log(lifetimePoints)
+    // fetch (`USERS_URL/${currentUser}/points`, {
+    //     method: 'patch',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Accept': 'application/json'
+    //     },
+    //     body: JSON.stringify( {
+    //         user: {
+    //             points: lifetimePoints += gamePoints,
+    //         } 
+    //     })
+    // })
+    // .then(r => r.json())
+    // .then(console.log)
+}
+
 const finalScoreParent = document.querySelector(".final")
 function renderFinalScore() {
+    updateUserLifetimePoints()
     finalScoreCard = document.createElement("span")
     finalScoreCard.className = "final-score-card"
     finalScoreCard.innerHTML = `
@@ -230,8 +247,6 @@ function resetGame() {
     correctAnswerTally = 0
 }
 
-
-renderCatAndDif()
 // initialize()
 
 //signup
@@ -306,6 +321,7 @@ function login(e){
             currentUser = o.user
             currentSession = o
             switchToLogout()
+            renderCatAndDif()
         } 
     })
     .catch(e => {
