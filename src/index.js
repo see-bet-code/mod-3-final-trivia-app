@@ -10,6 +10,7 @@ let currentSession = null
 let gamePoints = 0
 let index = 0
 let questionNumber = 1
+let correctAnswerTally = 0
 
 function initialize(categorySelection, difficultySelection) {
     fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
@@ -180,7 +181,6 @@ function gameCycle(e, question, data) {
     }
 }
 
-let correctAnswerTally = 0
 function updateGamePoints(difficulty) {
     correctAnswerTally++
     switch(difficulty) {
