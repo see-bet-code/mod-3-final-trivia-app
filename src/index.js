@@ -10,7 +10,32 @@ let current_session = null
 // in form create game and fetch (dynamic url based on form input)
 fetch(API_URL)
 .then(r => r.json())
-.then(console.log)
+.then(playGame)
+
+function playGame(questions) {
+    const main = document.querySelector('main')
+    const div = document.createElement('div')
+    res = questions.results
+    let i = 0
+    const p = document.createElement('p')
+    p.textContent = res[i].question
+    const btn = document.createElement('button')
+    btn.innerHTML = 'Next'
+    div.append(p)
+    main.append(div)
+    p.append(btn)
+    btn.addEventListener('click', function(e) {
+        if  (i < res.length) {
+            i++
+            p.textContent = res[i].question
+            p.append(btn)
+            if (i === res.length - 1) {
+                btn.textContent = "Last question"
+            }
+        }
+    })
+    
+}
 
 // might be part of helper for setting up category buttons
 fetch(API_CAT_URL)
@@ -99,8 +124,9 @@ function login(e){
             } 
         })
     })
-    .then(r => r.json())
+    .then(console.log)
     .then(function(o) {
+        console.log(o)
         if (o.status === 401) {
             throw Error(o.message)
         } else {
