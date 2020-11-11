@@ -21,7 +21,6 @@ const catAndDif = document.querySelector(".cat-and-dif")
 function renderCatAndDif() {
     
     catAndDif.innerHTML = `
-    
         <h2>Select Category</h2>
         <form id="select-category">
             <input type="radio" id="books" name="category" value=10>
@@ -123,7 +122,7 @@ function questionDataToObj(questionData) {
 
 }
 
-function gameCycle(e, answer, data, btn) {
+function gameCycle(e, answer, data) {
     e.preventDefault()
     console.log(answer)
     if (e.target.answer.value === answer) {
