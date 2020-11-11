@@ -5,13 +5,14 @@ const BASE_URL = 'http://localhost:3000/api/v1'
 const SESSIONS_URL = `${BASE_URL}/sessions`
 const USERS_URL = `${BASE_URL}/users`
 
-let current_user = null
-let current_session = null
+let currentUser = null
+let currentSession = null
+let gamePoints = 0
 
 function initialize(categorySelection, difficultySelection) {
-    fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
+    fetch(`${API_URL}&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
     .then(response => response.json())
-    .then(questionData => questionDataToObj(questionData));
+    .then(questionDataToObj);
 }
 
 // find parent for main
@@ -117,16 +118,16 @@ function questionDataToObj(questionData) {
     answersForm.append(submitBtn)
     answersDiv.append(answersForm)
     answersForm.addEventListener('submit', function(e) {
-        gameCycle(e, question.correct_answer, questionData, submitBtn)
+        gameCycle(e, question, questionData)
     })
 
 }
 
-function gameCycle(e, answer, data) {
+function gameCycle(e, question, data) {
     e.preventDefault()
-    console.log(answer)
-    if (e.target.answer.value === answer) {
+    if (e.target.answer.value === question.correct_answer) {
         console.log('Correct!')
+        updateGamePoints(question.difficulty)
     } else {
         console.log('Wrong!')
     }
@@ -134,12 +135,49 @@ function gameCycle(e, answer, data) {
         index++
         questionNumber++
         questionDataToObj(data)
-        // update user points
         // update graphics to show right answer???
     } else {
         console.log("finished!")
+        console.log(`You finished with ${gamePoints}`)
+        updateUserLifetimePoints()
     }
     
+}
+
+function updateGamePoints(difficulty) {
+    console.log(difficulty)
+    switch(difficulty) {
+        case "easy":
+            gamePoints += 5
+            break;
+        case "medium":
+            gamePoints += 10
+            break;
+        case "hard":
+            gamePoints += 15
+    }
+}
+
+function updateUserLifetimePoints() {
+    let lifetimePoints = 0
+    if (currentUser.points) {
+        lifetimePoints = currentUser.points
+    }
+    console.log(lifetimePoints)
+    fetch (`USERS_URL/${currentUser}/points`, {
+        method: 'patch',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify( {
+            user: {
+                points: lifetimePoints += gamePoints,
+            } 
+        })
+    })
+    .then(r => r.json())
+    .then(console.log)
 }
 
 
@@ -181,7 +219,7 @@ function switchToLogout() {
     logoutBtn.style.display = "initial"
     logoutBtn.addEventListener('click', function(e) {
         e.preventDefault()
-        fetch(`${BASE_URL}/sessions/${current_user.id}`, {
+        fetch(`${BASE_URL}/sessions/${currentUser.id}`, {
             method: 'delete'
         })
         .then(r => r.json())
@@ -194,6 +232,8 @@ function switchToLogout() {
     })
 
 }
+
+// login
 function login(e){
     e.preventDefault()
     fetch (SESSIONS_URL, {
@@ -215,8 +255,8 @@ function login(e){
         if (o.status === 401) {
             throw Error(o.message)
         } else {
-            current_user = o.user
-            current_session = o
+            currentUser = o.user
+            currentSession = o
             switchToLogout()
         } 
     })
