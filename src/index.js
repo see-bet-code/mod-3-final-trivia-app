@@ -10,13 +10,14 @@ let current_session = null
 
 function initialize(categorySelection, difficultySelection) {
     fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
-  .then(response => response.json())
-  .then(questionData => questionDataToObj(questionData));
+    .then(response => response.json())
+    .then(questionData => questionDataToObj(questionData));
 }
 
 // find parent for main
 const catAndDif = document.querySelector(".cat-and-dif")
-// create function that renders form to main 
+// create function that renders form to main
+// remove form after selection 
 function renderCatAndDif() {
     
     catAndDif.innerHTML = `
@@ -62,9 +63,8 @@ let index = 0
 let questionNumber = 1
 
 function questionDataToObj(questionData) {
-    console.log(index)
+    questionParent.innerHTML = ''
     const question = questionData.results[index]
-    console.log(question)
     const questionCard = document.createElement("span")
     questionCard.className = "question-card"
     questionCard.innerHTML = `
@@ -79,7 +79,6 @@ function questionDataToObj(questionData) {
         answersArray.push(incorrect_answer)
     });
     answersArray.push(question.correct_answer)
-    console.log(answersArray)
 
         function shuffle(array) {
             var currentIndex = array.length, temporaryValue, randomIndex;
@@ -94,26 +93,55 @@ function questionDataToObj(questionData) {
         }
 
     shuffledAnswerArray = shuffle(answersArray)
-    console.log(shuffledAnswerArray)
-    console.log(question.question)
     questionParent.append(questionCard)
     const answersDiv = document.querySelector(".answers-div")
     const answersForm = document.createElement("form")
     answersForm.className = "answers"
     answersForm.innerHTML = `
-        <input type="radio" name="answer" value=${shuffledAnswerArray[0]}>
+        <input type="radio" name="answer" value="${shuffledAnswerArray[0]}">
         <label>${shuffledAnswerArray[0]}</label>
-        <input type="radio" name="answer" value=${shuffledAnswerArray[1]}>
+        <input type="radio" name="answer" value="${shuffledAnswerArray[1]}">
         <label>${shuffledAnswerArray[1]}</label>
-        <input type="radio" name="answer" value=${shuffledAnswerArray[2]}>
+        <input type="radio" name="answer" value="${shuffledAnswerArray[2]}">
         <label>${shuffledAnswerArray[2]}</label>
-        <input type="radio"  name="answer" value=${shuffledAnswerArray[3]}>
+        <input type="radio"  name="answer" value="${shuffledAnswerArray[3]}">
         <label>${shuffledAnswerArray[3]}</label>
     `
+    const submitBtn = document.createElement('button')
+    submitBtn.type = 'submit'
+    if (index === 9) {
+        submitBtn.textContent = 'Last question!'
+    } else {
+        submitBtn.textContent = 'Next'
+    }
+    
+    answersForm.append(submitBtn)
     answersDiv.append(answersForm)
+    answersForm.addEventListener('submit', function(e) {
+        gameCycle(e, question.correct_answer, questionData, submitBtn)
+    })
 
 }
 
+function gameCycle(e, answer, data, btn) {
+    e.preventDefault()
+    console.log(answer)
+    if (e.target.answer.value === answer) {
+        console.log('Correct!')
+    } else {
+        console.log('Wrong!')
+    }
+    if (index < data.results.length - 1) {  
+        index++
+        questionNumber++
+        questionDataToObj(data)
+        // update user points
+        // update graphics to show right answer???
+    } else {
+        console.log("finished!")
+    }
+    
+}
 
 
 renderCatAndDif()
