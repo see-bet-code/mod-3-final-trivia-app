@@ -13,98 +13,57 @@
     </header>
     <br> 
     <main>
-        <!-- <div class="container-login100" style="background-image: url('images/bg-01.jpg');"> -->
-            <div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
-            <form class="login100-form validate-form flex-sb flex-w">
-            <span class="login100-form-title p-b-53">
-            Sign In With
-            </span>
-            <a href="#" class="btn-face m-b-20">
-            <i class="fa fa-facebook-official"></i>
-            Facebook
-            </a>
-            <a href="#" class="btn-google m-b-20">
-            <!-- <img src="images/icons/icon-google.png" alt="GOOGLE"> -->
-            Google
-            </a>
-            <div class="p-t-31 p-b-9">
-            <span class="txt1">
-            Username
-            </span>
-            </div>
-            <div class="wrap-input100 validate-input" data-validate="Username is required">
-            <input class="input100" type="text" name="username">
-            <span class="focus-input100"></span>
-            </div>
-            <div class="p-t-13 p-b-9">
-            <span class="txt1">
-            Password
-            </span>
-            <a href="#" class="txt2 bo1 m-l-5">
-            Forgot?
-            </a>
-            </div>
-            <div class="wrap-input100 validate-input" data-validate="Password is required">
-            <input class="input100" type="password" name="pass">
-            <span class="focus-input100"></span>
-            </div>
-            <div class="container-login100-form-btn m-t-17">
-            <button class="login100-form-btn">
-            Sign In
-            </button>
-            </div>
-            <div class="w-full text-center p-t-55">
-            <span class="txt2">
-            Not a member?
-            </span>
-            <a href="#" class="txt2 bo1">
-            Sign up now
-            </a>
-            </div>
-            </form>
-            </div>
-            </div>
-            <div id="dropDownSelect1"></div>
-            <!-- <script type="text/javascript" async="" src="https://www.google-analytics.com/analytics.js"></script>
-            <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-            <script src="vendor/animsition/js/animsition.min.js"></script>
-            <script src="vendor/bootstrap/js/popper.js"></script>
-            <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-            <script src="vendor/select2/select2.min.js"></script>
-            <script src="vendor/daterangepicker/moment.min.js"></script>
-            <script src="vendor/daterangepicker/daterangepicker.js"></script>
-            <script src="vendor/countdowntime/countdowntime.js"></script>
-            <script src="js/main.js"></script>
-            <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script> -->
-            <script>
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-            
-                  gtag('config', 'UA-23581568-13');
-                </script>
-                 <div class="cat-and-dif">
-                    
-                </div>
-                <div class="questions">
+      <div class="cat-and-dif">
+      </div>
+      
+      <div class="questions">
+      </div>
+      
+      <!-- Nav bar / login -->
+      <div class="topnav">
+            <a class="active" href="#home">Home</a>
+            <a href="#about">About</a>
+            <div class="session-container">
+                <form class="login">
+                    <input type="text" placeholder="Username" name="username">
+                    <input type="password" placeholder="Password" name="password">
+                    <button type="submit">Login</button>
+                    <button type="submit"class="logout" style="display:none">Logout</button>
+                </form>
+        </div>
+      </div>
+        
+        <!-- The Modal -->
+        <div id="id01" class="modal">
+            <!-- <span onclick="document.getElementById('id01').style.display='none'" 
+            class="close" title="Close Modal">&times;</span> -->
 
-                </div> 
-                
-            
+            <!-- Modal Content -->
+            <form class="modal-content animate" >
+                <div class="imgcontainer">
+                    <!-- <img src="img_avatar2.png" alt="Avatar" class="avatar"> -->
+                </div>
+
+                <div class="container">
+                    <label for="username"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="username" required>
+
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="password" required>
+
+                    <label for="passwordConfirmation"><b>Confirm Password</b></label>
+                    <input type="password" placeholder="Re-enter Password" name="passwordConfirmation" required>
+
+                    <button type="submit">Signup</button>
+                </div>
+
+                <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+                </div>
+            </form>
+        </div>
     </main>
-    <!-- <main>
-        <h1> Create an account</h1>
-        <form>
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username"><br>
-            <label for="password">Password:</label><br>
-            <input type="text" id="password" name="password"><br>
-            <label for="password">Re-enter Password:</label><br>
-            <input type="text" id="password" name="password"><br>
-            <input type="submit" value="Submit"><br>
-            <a href='/fakelink'>Or Signin</a>
-        </form>
-    </main> -->
     
 </body>
 </html>
