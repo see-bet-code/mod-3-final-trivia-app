@@ -2,6 +2,7 @@ const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple'
 const API_CAT_URL = 'https://opentdb.com/api_category.php'
 
 const BASE_URL = 'http://localhost:3000/api/v1'
+const GAMES_URL = `${BASE_URL}/games`
 const SESSIONS_URL = `${BASE_URL}/sessions`
 const USERS_URL = `${BASE_URL}/users`
 
@@ -12,10 +13,18 @@ let index = 0
 let questionNumber = 1
 let correctAnswerTally = 0
 
-function initialize(categorySelection, difficultySelection) {
-    fetch(`https://opentdb.com/api.php?amount=10&category=${parseInt(categorySelection)}&difficulty=${difficultySelection}&type=multiple`)
+const profile = document.createElement('p')
+profile.className = 'profile'
+
+fetch(API_CAT_URL)
     .then(response => response.json())
-    .then(questionDataToObj);
+    .then(console.log)
+
+function initialize(categorySelection, difficultySelection) {
+    fetch(`https://opentdb.com/api.php?amount=10&category=${categorySelection}&difficulty=${difficultySelection}&type=multiple`)
+    .then(response => response.json())
+    .then(questionDataToObj)
+    .catch(console.log)
 }
 
 // find parent for main
@@ -27,17 +36,16 @@ function renderCatAndDif() {
     catAndDif.innerHTML = `
         <h2>Select Category</h2>
         <form id="select-category" name="categoryFrom" >
-            <input type="radio" id="books" name="category" value=10 required>
+            <input type="radio" id="books" name="category" value=10 required checked>
             <label for="books">Books</label>
             <input type="radio" id="film" name="category" value=11>
             <label for="film">Film</label>
-            <input type="radio" id="music" name="category" value=13>
+            <input type="radio" id="music" name="category" value=12>
             <label for="music">Music</label>
             <input type="radio" id="television" name="category" value=14>
             <label for="television">Television</label>
             <input type="radio" id="video-games" name="category" value=15>
             <label for="video-games">Video Games</label><br>
-
             <input type="radio" id="science-and-nature" name="category" value=17>
             <label for="science-and-nature">Science and Nature</label>
             <input type="radio" id="mythology" name="category" value=20>
@@ -48,10 +56,9 @@ function renderCatAndDif() {
             <label for="history">History</label>
             <input type="radio" id="animals" name="category" value=27>
             <label for="animals">Animals</label>
-           
 
             <h2>Select Difficulty</h2>
-            <input type="radio" id="easy" name="difficulty" value="easy" required>
+            <input type="radio" id="easy" name="difficulty" value="easy" required checked>
             <label for="easy">Easy</label>
             <input type="radio" id="medium" name="difficulty" value="medium">
             <label for="medium">Medium</label>
@@ -67,10 +74,11 @@ function renderCatAndDif() {
     const difficultyOptions = ["easy", "medium", "hard"]
 
     randomButton.addEventListener("click", function() {
-        const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
-        const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
-        initialize(randomCategory, randomDifficulty)
-        catAndDif.innerHTML = ""
+        // const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
+        // const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
+        // initialize(randomCategory, randomDifficulty)
+        // catAndDif.innerHTML = ""
+        renderProfile()
     })
 
     catAndDif.addEventListener("submit", submitForm)
@@ -106,18 +114,17 @@ questionParent = document.querySelector(".questions")
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+}
 
 function questionDataToObj(questionData) {
-    questionParent.innerHTML = ''
     const question = questionData.results[index]
     const questionCard = document.createElement("span")
     questionCard.className = "question-card"
     questionCard.innerHTML = `
     <h3>Question ${questionNumber} for ${question.category} on ${capitalizeFirstLetter(question.difficulty)} Difficulty</h3>
     <h3>${question.question}</h3>
-    <div class="answers-div">
-    </div>
+    <form class="answers-form">
+    </form>
     `
     
     // Pushing all the answers into a new array in order to randomize them.
@@ -126,23 +133,23 @@ function questionDataToObj(questionData) {
         answersArray.push(incorrect_answer)
     });
     answersArray.push(question.correct_answer)
-    console.log(answersArray)
     shuffledAnswerArray = shuffle(answersArray)
     
-    console.log(shuffledAnswerArray)
     questionParent.append(questionCard)
-    const answersDiv = document.querySelector(".answers-div")
-    const answersForm = document.createElement("form")
-    answersForm.className = "answers"
+    const answersForm = document.querySelector(".answers-form")
     answersForm.innerHTML = `
-        <input type="radio" name="answer" value="${shuffledAnswerArray[0]}" required>
-        <label>${shuffledAnswerArray[0]}</label>
-        <input type="radio" name="answer" value="${shuffledAnswerArray[1]}">
-        <label>${shuffledAnswerArray[1]}</label>
-        <input type="radio" name="answer" value="${shuffledAnswerArray[2]}">
-        <label>${shuffledAnswerArray[2]}</label>
-        <input type="radio"  name="answer" value="${shuffledAnswerArray[3]}">
-        <label>${shuffledAnswerArray[3]}</label>
+        <label class="btn btn-outline-primary">
+            <input type="radio" name="answer" value="${shuffledAnswerArray[0]}" required checked>${shuffledAnswerArray[0]}
+        </label>
+        <label class="btn btn-outline-primary">
+            <input type="radio" name="answer" value="${shuffledAnswerArray[1]}">${shuffledAnswerArray[1]}
+        </label>
+        <label class="btn btn-outline-primary">
+            <input type="radio" name="answer" value="${shuffledAnswerArray[2]}">${shuffledAnswerArray[2]}
+        </label>
+        <label class="btn btn-outline-primary">
+            <input type="radio" name="answer" value="${shuffledAnswerArray[3]}">${shuffledAnswerArray[3]}
+        </label>
     `
     const submitBtn = document.createElement('button')
     submitBtn.type = 'submit'
@@ -153,7 +160,6 @@ function questionDataToObj(questionData) {
     }
     
     answersForm.append(submitBtn)
-    answersDiv.append(answersForm)
     answersForm.addEventListener('submit', function(e) {
         gameCycle(e, question, questionData)
     })
@@ -162,22 +168,22 @@ function questionDataToObj(questionData) {
 
 function gameCycle(e, question, data) {
     e.preventDefault()
-    console.log(question.correct_answer)
     if (e.target.answer.value === question.correct_answer) {
         console.log('Correct!')
         updateGamePoints(question.difficulty)
     } else {
         console.log('Wrong!')
     }
+    questionParent.innerHTML = ''
     if (index < data.results.length - 1) {  
         index++
         questionNumber++
         questionDataToObj(data)
         // update graphics to show right answer???
     } else {
-        console.log("finished!")
-        questionParent.innerHTML = ''
+        addToGameHistory(question)
         renderFinalScore()
+        renderProfile()
     }
 }
 
@@ -195,31 +201,8 @@ function updateGamePoints(difficulty) {
     }
 }
 
-function updateUserLifetimePoints() {
-    let lifetimePoints = 0
-    if (currentUser.points) {
-        lifetimePoints = currentUser.points
-    }
-    console.log(lifetimePoints)
-    // fetch (`USERS_URL/${currentUser}/points`, {
-    //     method: 'patch',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Accept': 'application/json'
-    //     },
-    //     body: JSON.stringify( {
-    //         user: {
-    //             points: lifetimePoints += gamePoints,
-    //         } 
-    //     })
-    // })
-    // .then(r => r.json())
-    // .then(console.log)
-}
-
 const finalScoreParent = document.querySelector(".final")
 function renderFinalScore() {
-    updateUserLifetimePoints()
     finalScoreCard = document.createElement("span")
     finalScoreCard.className = "final-score-card"
     finalScoreCard.innerHTML = `
@@ -227,17 +210,36 @@ function renderFinalScore() {
     <h2>Let's See How You Did.</h2>
     <h3>Looks like you got ${correctAnswerTally}/10 of the questions correct</h3>
     <h3>You've received ${gamePoints} for the Game</h3>
-    <button class="paly-another-button" >Play Another Game of Trivia</button>
+    <button class="play-another-button" >Play Another Game of Trivia</button>
     `
     finalScoreParent.append(finalScoreCard)
-    const playAnother = document.querySelector(".paly-another-button")
+    const playAnother = document.querySelector(".play-another-button")
     playAnother.addEventListener('click', function() {
         finalScoreParent.innerHTML = ''
         renderCatAndDif()
     })
-
     resetGame()
 
+}
+
+function addToGameHistory(question) {
+    console.log(gamePoints)
+    fetch (GAMES_URL, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify( {
+                category: question.category,
+                difficulty: question.difficulty,
+                points: gamePoints,
+                user_id: currentUser.id
+        })
+    })
+    .then(r => r.json())
+    .then(console.log)
 }
 
 function resetGame() {
@@ -248,13 +250,34 @@ function resetGame() {
 }
 
 // initialize()
+function renderProfile() {
+    fetch (`${USERS_URL}/${currentUser.id}`)
+    .then(r => r.json())
+    .then(user => {
+        let total = 0
+        let points = 0
+        if (user.games) {
+            total = user.games.length
+            var reducer = function add(acc, g) { return acc + g.points }
+            points = user.games.reduce(reducer, 0)
+        }
+        console.log(points)
+        loginForm.style.display = "none"
+        profile.textContent = ''
+        profile.textContent = `
+        Name: ${user.name}, Total Games played: ${total}, Lifetimepoints: ${points}
+        `
+        const sessionContainer = document.querySelector('div.session-container')
+        sessionContainer.append(profile)
+    })
+    
+}
 
 //signup
 function signUp(){
     const modal = document.getElementById('id01')
     modal.style.display='initial'
     const signupForm = modal.querySelector('form')
-    console.log(signupForm)
     signupForm.addEventListener('submit', function(e) {
         e.preventDefault()
         fetch (USERS_URL, {
@@ -266,6 +289,7 @@ function signUp(){
             credentials: 'same-origin',
             body: JSON.stringify( {
                 user: {
+                    name: e.target.name.value,
                     username: e.target.username.value,
                     password: e.target.password.value,
                     password_confirmation: e.target.passwordConfirmation.value
@@ -278,21 +302,20 @@ function signUp(){
 }
 
 function switchToLogout() {
-    const loginBtn = loginForm.querySelector('button')
-    loginBtn.style.display = "none"
-    const logoutBtn = loginForm.querySelector('button.logout')
+    const logoutBtn = document.querySelector('button.logout')
     logoutBtn.style.display = "initial"
     logoutBtn.addEventListener('click', function(e) {
+        console.log('clicked')
         e.preventDefault()
-        fetch(`${BASE_URL}/sessions/${currentUser.id}`, {
+        fetch(`${SESSIONS_URL}/${currentUser.id}`, {
             method: 'delete'
         })
         .then(r => r.json())
         .then(j => {
-            console.log(j)
-            loginBtn.style.display = "initial"
-            logoutBtn.style.display = "none"
             loginForm.reset()
+            loginForm.style.display = "initial"
+            document.querySelector('button.logout').remove()
+            document.querySelector('p.profile').remove()
         })
     })
 
@@ -320,11 +343,14 @@ function login(e){
         } else {
             currentUser = o.user
             currentSession = o
+            renderProfile()
             switchToLogout()
             renderCatAndDif()
+    
         } 
     })
     .catch(e => {
+        console.log(e)
         if (confirm("We don't recognize your credentials. Sign up?")) {
             signUp()
         }
