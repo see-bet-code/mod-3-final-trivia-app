@@ -1,3 +1,5 @@
+// import moment from 'moment';
+
 const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple'
 const API_CAT_URL = 'https://opentdb.com/api_category.php'
 
@@ -17,6 +19,8 @@ function initialize(categorySelection, difficultySelection) {
     .then(response => response.json())
     .then(questionDataToObj);
 }
+
+
 
 // find parent for main
 const catAndDif = document.querySelector(".cat-and-dif")
@@ -109,6 +113,7 @@ function capitalizeFirstLetter(string) {
   }
 
 function questionDataToObj(questionData) {
+    console.log(moment.duration())
     questionParent.innerHTML = ''
     const question = questionData.results[index]
     const questionCard = document.createElement("span")
@@ -143,6 +148,7 @@ function questionDataToObj(questionData) {
         <label>${shuffledAnswerArray[2]}</label>
         <input type="radio"  name="answer" value="${shuffledAnswerArray[3]}">
         <label>${shuffledAnswerArray[3]}</label>
+        <div class="countdown"></div>
     `
     const submitBtn = document.createElement('button')
     submitBtn.type = 'submit'
@@ -155,10 +161,56 @@ function questionDataToObj(questionData) {
     answersForm.append(submitBtn)
     answersDiv.append(answersForm)
     answersForm.addEventListener('submit', function(e) {
+        clearInterval(timer)
         gameCycle(e, question, questionData)
     })
 
+    let countdown = document.querySelector(".countdown")
+    
+        let duration = moment.duration({
+            'minutes': 0,
+            'seconds': 15
+        });
+
+        let min = duration.minutes();
+        let sec = duration.seconds();
+
+        console.log(duration.seconds())
+        
+        let timestamp = new Date(0, 0, 0, 2, 10, 30);
+        let interval = 1;
+        let timer = setInterval(function() {
+            timestamp = new Date(timestamp.getTime() + interval * 1000);
+        
+            duration = moment.duration(duration.asSeconds() - interval, 'seconds');
+            
+            sec -= 1;
+            if (min < 0) return clearInterval(timer);
+            if (min < 10 && min.length != 2) min = '0' + min;
+            if (sec < 0 && min != 0) {
+                min -= 1;
+                sec = 59;
+            } else if (sec < 10 && length.sec != 2) sec = '0' + sec;
+            
+            countdown.innerHTML = `${min}:${sec}`
+           
+            if (min == 0 && sec == 0)
+                clearInterval(timer);
+            if (questionNumber == 10 && sec == 0) {
+                questionParent.innerHTML = ''
+                renderFinalScore()
+            } else if (sec == 0) {
+                questionDataToObj(questionData)
+                index++
+                questionNumber++
+                console.log(questionNumber)
+            }
+        
+        }, 1000);
+
 }
+
+
 
 function gameCycle(e, question, data) {
     e.preventDefault()
@@ -195,12 +247,12 @@ function updateGamePoints(difficulty) {
     }
 }
 
-function updateUserLifetimePoints() {
-    let lifetimePoints = 0
-    if (currentUser.points) {
-        lifetimePoints = currentUser.points
-    }
-    console.log(lifetimePoints)
+// function updateUserLifetimePoints() {
+//     let lifetimePoints = 0
+//     if (currentUser.points) {
+//         lifetimePoints = currentUser.points
+//     }
+//     console.log(lifetimePoints)
     // fetch (`USERS_URL/${currentUser}/points`, {
     //     method: 'patch',
     //     headers: {
@@ -215,11 +267,11 @@ function updateUserLifetimePoints() {
     // })
     // .then(r => r.json())
     // .then(console.log)
-}
+// }
 
 const finalScoreParent = document.querySelector(".final")
 function renderFinalScore() {
-    updateUserLifetimePoints()
+    // updateUserLifetimePoints()
     finalScoreCard = document.createElement("span")
     finalScoreCard.className = "final-score-card"
     finalScoreCard.innerHTML = `
