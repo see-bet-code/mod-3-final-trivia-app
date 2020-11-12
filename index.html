@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trivia App</title>
     <link rel="stylesheet" href="./styles/main.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>    
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <script src="./src/index.js" defer></script>
 </head>
 <body>
@@ -23,8 +27,8 @@
                     <input type="text" placeholder="Username" name="username">
                     <input type="password" placeholder="Password" name="password">
                     <button type="submit">Login</button>
-                    <button type="submit"class="logout" style="display:none">Logout</button>
                 </form>
+                <button class="logout" style="display:none">Logout</button>
         </div>
       </div>
         
@@ -40,6 +44,9 @@
                 </div>
 
                 <div class="container">
+                    <label for="name"><b>Name</b></label>
+                    <input type="text" placeholder="Enter Name" name="name" required>
+
                     <label for="username"><b>Username</b></label>
                     <input type="text" placeholder="Enter Username" name="username" required>
 
@@ -63,7 +70,7 @@
             
         </div>
         
-        <div class="questions">
+        <div class="questions">  
         </div>
   
         <div class="final">
