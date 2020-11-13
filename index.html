@@ -33,9 +33,7 @@
                     </li>
                     <li>
                         <form class="login float:left">
-                            <input type="text" placeholder="Username" name="username">
-                            <input type="password" placeholder="Password" name="password">
-                            <button type="submit" class="navbar mr-2">Login</button>
+                            <button type="submit" class="navbar mr-2 login-nav">Login</button>
                         </form>
                         <button class="logout navbar" style="display:none">Logout</button>
                     </li>
@@ -99,8 +97,8 @@
 
         <!-- Modal Content -->
         <form class="modal-content animate" >
-            <div class="imgcontainer">
-                <img src="https://readymadepubquiz.com/wp-content/uploads/Pub-Quiz.jpg" alt="Temp logo" class="rounded" width="155">
+            <div class="image">
+                <img src="" alt="Temp logo" class="rounded" width="155">
             </div>
 
                 <label for="name"><b>Name</b></label>
@@ -118,10 +116,35 @@
                 <label for="avatar"><b>Choose a profile picture</b></label>
                 <input type="link" name="avatar">
 
-                <button type="submit">Signup</button>
+                <button type="submit" class="btn btn-sm btn-outline-primary w-100">Signup</button>
 
             <!-- <div class="container" style="background-color:#f1f1f1"> -->
-            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn btn btn-sm btn-outline-primary w-100">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
+    </div>
+
+    <!-- The Modal -->
+    <div id="id01-login" class="modal">
+        <!-- <span onclick="document.getElementById('id01').style.display='none'" 
+        class="close" title="Close Modal">&times;</span> -->
+
+        <!-- Modal Content -->
+        <form class="modal-content animate login-2" >
+            <div class="image">
+                <img src="https://www.iconpacks.net/icons/1/free-user-login-icon-305-thumb.png" alt="Temp logo" class="rounded" width="155" centered>
+            </div>
+
+                <label for="username"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" required>
+
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+
+                <button type="submit" class="btn btn-sm btn-outline-primary w-100">Login</button>
+
+            <button type="button" onclick="document.getElementById('id01-login').style.display='none'" class="cancelbtn btn btn-sm btn-outline-primary w-100">Cancel</button>
             <span class="psw">Forgot <a href="#">password?</a></span>
             </div>
         </form>
@@ -131,9 +154,9 @@
             
         </div>
         
-        <div class="questions">  
+        <div class="questions modal-content">  
         </div>
-  
+
         <div class="final">
             <!-- <div class="countdown"> -->
 
@@ -141,6 +164,26 @@
         </div>
         <script defer src="lib/moment/moment.min.js"></script>
     </main>
-    
+    <!-- Footer -->
+<footer class="page-footer font-small unique-color-dark pt-4">
+
+    <!-- Footer Elements -->
+    <div class="container">
+
+  
+    </div>
+    <!-- Footer Elements -->
+  
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2020 Copyright:<br>
+        <a href="https://github.com/see-bet-code"> Brittani</a> +
+      <a href="https://github.com/gregaswright"> Greg</a><br><br>
+      <a href="https://github.com/see-bet-code/mod-3-final-trivia-app"> Frontend</a> //
+      <a href="https://github.com/see-bet-code/mod-3-final-trivia-app-backend"> Backend</a>
+    </div>
+    <!-- Copyright -->
+  
+  </footer>
+  <!-- Footer -->
 </body>
 </html>

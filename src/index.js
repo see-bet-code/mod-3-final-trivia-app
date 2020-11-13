@@ -15,7 +15,7 @@ let index = 0
 let questionNumber = 1
 let correctAnswerTally = 0
 
-const loginForm = document.querySelector('form.login')
+const loginBtn = document.querySelector('button.login-nav')
 const finalScoreParent = document.querySelector(".final")
 // find parent for main
 const catAndDif = document.querySelector(".cat-and-dif")
@@ -40,7 +40,7 @@ function renderCatAndDif() {
     
     catAndDif.innerHTML = `
         <h2>Select Category</h2>
-        <form id="select-category" name="categoryFrom" >
+        <form id="select-category" name="categoryFrom" class="select-form">
             <input type="radio" id="books" name="category" value=10 required checked>
             <label for="books">Books</label>
             <input type="radio" id="film" name="category" value=11>
@@ -69,9 +69,9 @@ function renderCatAndDif() {
             <label for="medium">Medium</label>
             <input type="radio" id="hard" name="difficulty" value="hard">
             <label for="hard">Hard</label><br><br>
-            <button class="cat-dif-button" >Start Round</button> 
+            <button class="cat-dif-button btn btn-outline-primary" >Start Round</button> 
         </form><br>
-        <button class="random-button" >Random Category and Difficulty</button> 
+        <button class="random-button btn btn-outline-secondary" >Random Category and Difficulty</button> 
     `
     const randomButton = document.querySelector(".random-button")
 
@@ -118,16 +118,17 @@ function capitalizeFirstLetter(string) {
 }
 
 function questionDataToObj(questionData) {
-    console.log(moment.duration())
     questionParent.innerHTML = ''
+    // questionParent.style.display = "initial"
     const question = questionData.results[index]
-    const questionCard = document.createElement("span")
-    questionCard.className = "question-card"
-    questionCard.innerHTML = `
-    <h3>Question ${questionNumber} for ${question.category} on ${capitalizeFirstLetter(question.difficulty)} Difficulty</h3>
-    <h3>${question.question}</h3>
-    <form class="answers-form">
-    </form>
+    questionParent.innerHTML =  `
+        <div class="modal-header">
+            <h3><span class="label label-warning" id="qid">${questionNumber}</span>${question.question}</h3>
+            <h4>
+                Category: <span class="label label-warning" id="qid-c">${question.category}</span><br>
+                Difficulty: <span class="label label-warning" id="qid-d">${capitalizeFirstLetter(question.difficulty)}</span>
+            </h4>
+        </div>
     `
     
     // Pushing all the answers into a new array in order to randomize them.
@@ -138,33 +139,37 @@ function questionDataToObj(questionData) {
     answersArray.push(question.correct_answer)
     shuffledAnswerArray = shuffle(answersArray)
     
-    questionParent.append(questionCard)
-    const answersForm = document.querySelector(".answers-form")
+    const answersForm = document.createElement("form")
+    answersForm.className= 'answers-form'
+    questionParent.append(answersForm)
     answersForm.innerHTML = `
-        <label class="btn btn-outline-primary">
+        <div class="countdown"></div>
+        <label class="btn btn-outline-primary element-animation0">
             <input type="radio" name="answer" value="${shuffledAnswerArray[0]}" required>${shuffledAnswerArray[0]}
         </label>
-        <label class="btn btn-outline-primary">
+        <label class="btn btn-outline-primary element-animation1">
             <input type="radio" name="answer" value="${shuffledAnswerArray[1]}">${shuffledAnswerArray[1]}
         </label>
-        <label class="btn btn-outline-primary">
+        <label class="btn btn-outline-primary element-animation2">
             <input type="radio" name="answer" value="${shuffledAnswerArray[2]}">${shuffledAnswerArray[2]}
         </label>
-        <label class="btn btn-outline-primary">
+        <label class="btn btn-outline-primary element-animation3">
             <input type="radio" name="answer" value="${shuffledAnswerArray[3]}">${shuffledAnswerArray[3]}
         </label>
-        <div class="countdown"></div>
+        <br>
     `
     const submitBtn = document.createElement('button')
+    submitBtn.classList.add("btn", "btn-secondary", "submit-btn")
     submitBtn.type = 'submit'
+    submitBtn.textContent = 'Next'
     if (index === 9) {
         submitBtn.textContent = 'Last question!'
-    } else {
-        submitBtn.textContent = 'Next'
     }
     
     answersForm.append(submitBtn)
     answersForm.addEventListener('submit', function(e) {
+        console.log('click')
+        console.log(e.target.answer.value)
         clearInterval(timer)
         gameCycle(e, question, questionData)
     })
@@ -207,7 +212,6 @@ function questionDataToObj(questionData) {
                 questionDataToObj(questionData)
                 index++
                 questionNumber++
-                console.log(questionNumber)
             }
         
         }, 1000);
@@ -259,7 +263,7 @@ function renderFinalScore() {
     <h2>Let's See How You Did.</h2>
     <h3>Looks like you got ${correctAnswerTally}/10 of the questions correct</h3>
     <h3>You've received ${gamePoints} for the Game</h3>
-    <button class="play-another-button" >Play Another Game of Trivia</button>
+    <button class="play-another-button btn btn-outline-secondary" >Play Another Game of Trivia</button>
     `
     finalScoreParent.append(finalScoreCard)
     const playAnother = document.querySelector(".play-another-button")
@@ -299,15 +303,19 @@ function resetGame() {
 }
 
 // initialize()
+
 function renderProfile() {
-    const b = document.querySelector('button.profile')
-    b.addEventListener('click', e => document.getElementById('profile').style.display = "initial")
-    fetch (`${USERS_URL}/${currentUser.id}`)
-    .then(r => r.json())
-    .then(user => {
+        const b = document.querySelector('button.profile')
+        b.addEventListener('click', e => {
+            if (currentUser) {
+                document.getElementById('profile').style.display = "initial"
+            }
+        })
+        fetch (`${USERS_URL}/${currentUser.id}`)
+        .then(r => r.json())
+        .then(user => {
         var reducer = function add(acc, g) { return acc + g.points }
         points = user.games.reduce(reducer, 0)
-        loginForm.style.display = "none"
         document.querySelector('h4#name').innerHTML = user.name
         document.querySelector('span#username').innerHTML = '@' + user.username
         document.querySelector('span.total').innerHTML = user.games.length
@@ -359,50 +367,86 @@ function switchToLogout() {
         })
         .then(r => r.json())
         .then(j => {
-            loginForm.reset()
-            loginForm.style.display = "initial"
+            document.querySelector('form.login-2').reset()
+            loginBtn.style.display = "initial"
             document.querySelector('button.logout').remove()
-            document.querySelector('p.profile').remove()
+            currentUser = null
+            currentSession = null
+            console.log(currentUser)
+            catAndDif.remove()
         })
     })
 
 }
 
-function login(e){
-    e.preventDefault()
-    fetch (SESSIONS_URL, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify( {
-            user: {
-                username: e.target.username.value,
-                password: e.target.password.value
+function login(){
+    const modal = document.getElementById('id01-login')
+    modal.style.display='initial'
+    const loginForm = modal.querySelector('form')
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault()
+        fetch (SESSIONS_URL, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify( {
+                user: {
+                    username: e.target.username.value,
+                    password: e.target.password.value
+                } 
+            })
+        })
+        .then(r => r.json())
+        .then(function(o) {
+            if (o.status === 401) {
+                throw Error(o.message)
+            } else {
+                currentUser = o.user
+                currentSession = o
+                renderProfile()
+                switchToLogout()
+                renderCatAndDif()
+                document.getElementById('id01-login').style.display = "none"
+                loginBtn.style.display="none"
             } 
         })
-    })
-    .then(r => r.json())
-    .then(function(o) {
-        if (o.status === 401) {
-            throw Error(o.message)
-        } else {
-            currentUser = o.user
-            currentSession = o
-            renderProfile()
-            switchToLogout()
-            renderCatAndDif()
-    
-        } 
-    })
-    .catch(e => {
-        console.log(e)
-        if (confirm("We don't recognize your credentials. Sign up?")) {
-            signUp()
-        }
+        .catch(e => {
+            console.log(e)
+            if (confirm("We don't recognize your credentials. Sign up?")) {
+                signUp()
+            }
+        })
     })
 }
 
-loginForm.addEventListener('submit', login)
+// function login(e){
+//     console.
+//     e.preventDefault()
+//     fetch (SESSIONS_URL, {
+       
+//         body: JSON.stringify( {
+//             user: {
+//                 username: e.target.username.value,
+//                 password: e.target.password.value
+//             } 
+//         })
+//     })
+//     .then(r => r.json())
+//     .then(function(o) {
+//         if (o.status === 401) {
+//             throw Error(o.message)
+//         } else {
+//             currentUser = o.user
+//             currentSession = o
+//             renderProfile()
+//             switchToLogout()
+//             renderCatAndDif()
+    
+//         } 
+//     })
+// }
+
+loginBtn.addEventListener('click', e => login())
