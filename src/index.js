@@ -37,7 +37,6 @@ function initialize(categorySelection, difficultySelection) {
 
 // create function that renders form to main
 function renderCatAndDif() {
-    console.log(catAndDif)
     catAndDif.innerHTML = `
         <h2>Select Category</h2>
         <form id="select-category" name="categoryFrom" class="select-form">
@@ -73,11 +72,12 @@ function renderCatAndDif() {
         </form><br>
         <button class="random-button btn btn-outline-secondary" >Random Category and Difficulty</button> 
     `
+
     const randomButton = document.querySelector(".random-button")
 
     const categoryNumbers = [10, 11, 13, 14, 15, 17, 20, 21, 23, 27]
     const difficultyOptions = ["easy", "medium", "hard"]
-
+    console.log(randomButton)
     randomButton.addEventListener("click", function() {
         const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
         const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
@@ -372,7 +372,7 @@ function switchToLogout() {
             document.querySelector('button.logout').style.display = "none"
             currentUser = null
             currentSession = null
-            catAndDif.remove()
+            catAndDif.innerHTML = ""
         })
     })
 
@@ -493,7 +493,6 @@ function allTimeHighScores(sortedPlayerArray) {
     hardBtn.addEventListener("click", hardScores)
 
     function easyScores() {
-        console.log("hello")
         leaderBoardTb.innerHTML = ""
         sortedPlayerArray.forEach(playerObj => {
             if (playerObj.difficulty == "easy") {
