@@ -207,9 +207,9 @@ function questionDataToObj(questionData) {
                 questionParent.innerHTML = ''
                 renderFinalScore()
             } else if (sec == 0) {
-                questionDataToObj(questionData)
                 index++
                 questionNumber++
+                questionDataToObj(questionData)
                 console.log(questionNumber)
             }
         
@@ -412,3 +412,128 @@ function login(e){
 
 const loginForm = document.querySelector('form.login')
 loginForm.addEventListener('submit', login)
+
+function initializeGames() {
+    fetch(GAMES_URL)
+  .then(response => response.json())
+  .then(gamesData => leaderBoardDisplay(gamesData));
+}
+
+
+const initializeGame = document.querySelector(".scores")
+initializeGame.addEventListener("click", initializeGames)
+
+
+
+function leaderBoardDisplay(playerObjectArray){
+    const playerData = playerObjectArray
+    console.log(playerObjectArray)
+    const modalOne = document.getElementById('id02')
+    modalOne.style.display='initial'
+    
+    
+    function compare(a, b) {
+        const playerA = a.points;
+        const playerB = b.points;
+      
+        let comparison = 0;
+        if (playerA > playerB) {
+          comparison = -1;
+        } else if (playerA < playerB) {
+          comparison = +1;
+        }
+        return comparison;
+      }
+    
+      const sortedPlayerArray = playerData.sort(compare);
+      allTimeHighScores(sortedPlayerArray)
+    //   easyScores(sortedPlayerArray)
+      
+}
+
+leaderBoardTb = document.querySelector("#table-body")
+
+function allTimeHighScores(sortedPlayerArray) {
+    sortedPlayerArray.forEach(playerObj => {
+        console.log(playerObj)
+        
+        const playerCard = document.createElement("tr")
+        playerCard.className = "playerCard"
+        playerCard.dataset.id = playerObj.id
+
+        playerCard.innerHTML = `
+            <td class="user-name">${playerObj.user.username}</td> 
+            <td class="category">${playerObj.category}</td> 
+            <td class="difficulty">${playerObj.difficulty}</td> 
+            <td class="points">${playerObj.points}</td>
+        `
+        leaderBoardTb.append(playerCard) 
+    });
+
+   
+
+    const easyBtn = document.querySelector("#easy")
+    const mediumBtn = document.querySelector("#medium")
+    const hardBtn = document.querySelector("#hard")
+
+    easyBtn.addEventListener("click", easyScores)
+    mediumBtn.addEventListener("click", mediumScores)
+    hardBtn.addEventListener("click", hardScores)
+
+    function easyScores() {
+        console.log("hello")
+        leaderBoardTb.innerHTML = ""
+        sortedPlayerArray.forEach(playerObj => {
+            if (playerObj.difficulty == "easy") {
+                const playerCard = document.createElement("tr")
+                playerCard.className = "playerCard"
+                playerCard.dataset.id = playerObj.id
+    
+                playerCard.innerHTML = `
+                <td class="user-name">${playerObj.user.username}</td> 
+                <td class="category">${playerObj.category}</td> 
+                <td class="difficulty">${playerObj.difficulty}</td> 
+                <td class="points">${playerObj.points}</td>
+            `
+                leaderBoardTb.append(playerCard) 
+            }
+        });
+    }
+
+    function mediumScores() {
+        leaderBoardTb.innerHTML = ""
+        sortedPlayerArray.forEach(playerObj => {
+            if (playerObj.difficulty == "medium") {
+                const playerCard = document.createElement("tr")
+                playerCard.className = "playerCard"
+                playerCard.dataset.id = playerObj.id
+                 playerCard.innerHTML = `
+                <td class="user-name">${playerObj.user.username}</td> 
+                <td class="category">${playerObj.category}</td> 
+                <td class="difficulty">${playerObj.difficulty}</td> 
+                <td class="points">${playerObj.points}</td>
+            `
+                leaderBoardTb.append(playerCard) 
+            }
+        });
+    }
+
+    function hardScores() {
+        leaderBoardTb.innerHTML = ""
+        sortedPlayerArray.forEach(playerObj => {
+            if (playerObj.difficulty == "hard") {
+                const playerCard = document.createElement("tr")
+                playerCard.className = "playerCard"
+                playerCard.dataset.id = playerObj.id
+                playerCard.innerHTML = `
+                <td class="user-name">${playerObj.user.username}</td> 
+                <td class="category">${playerObj.category}</td> 
+                <td class="difficulty">${playerObj.difficulty}</td> 
+                <td class="points">${playerObj.points}</td>
+            `
+                leaderBoardTb.append(playerCard) 
+            }
+        });
+    }
+}
+

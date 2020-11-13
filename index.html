@@ -21,7 +21,7 @@
       <!-- Nav bar / login -->
       <div class="topnav">
             <a class="active" href="#home">Home</a>
-            <a href="#about">About</a>
+            <a class="scores" href="#about">About</a>
             <div class="session-container">
                 <form class="login">
                     <input type="text" placeholder="Username" name="username">
@@ -36,7 +36,9 @@
         <div id="id01" class="modal">
             <!-- <span onclick="document.getElementById('id01').style.display='none'" 
             class="close" title="Close Modal">&times;</span> -->
+            <div class="modal-content animate">
 
+            </div>
             <!-- Modal Content -->
             <form class="modal-content animate" >
                 <div class="imgcontainer">
@@ -74,10 +76,39 @@
         </div>
   
         <div class="final">
-            <!-- <div class="countdown"> -->
-
-            </div>
+            
         </div>
+
+        <div id="id02" class="modal">
+            <!-- <span onclick="document.getElementById('id01').style.display='none'" 
+            class="close" title="Close Modal">&times;</span> -->
+            <div class="modal-content animate">
+                <h4 id="score-banner">All Time High Scores</h4>
+                <div id="difficulty-div">
+                    <button id="easy" name="difficulty" value="easy" type="button">Top Scores for Easy</button>
+                    <button id="medium" name="difficulty" value="medium" type="button">Top Scores for Medium</button>
+                    <button id="hard" name="difficulty" value="hard" type="button">Top Scores for Hard</button> 
+                </div> 
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User Name</th>
+                      <th>Category</th>
+                      <th>Difficulty</th>
+                      <th>Points</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body">
+
+                </tbody> 
+                <button id="close window" onclick="document.getElementById('id02').style.display='none'" type="button">Close High Scores</button>
+            </div>
+           
+            
+            <!-- Modal Content -->
+            
+        </div>
+
         <script defer src="lib/moment/moment.min.js"></script>
     </main>
     
