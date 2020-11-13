@@ -21,9 +21,9 @@ const finalScoreParent = document.querySelector(".final")
 const catAndDif = document.querySelector(".cat-and-dif")
 const questionParent = document.querySelector(".questions")
 
-fetch(API_CAT_URL)
-    .then(response => response.json())
-    .then(console.log)
+// fetch(API_CAT_URL)
+//     .then(response => response.json())
+//     .then(console.log)
 
 function initialize(categorySelection, difficultySelection) {
     fetch(`https://opentdb.com/api.php?amount=10&category=${categorySelection}&difficulty=${difficultySelection}&type=multiple`)
@@ -77,7 +77,6 @@ function renderCatAndDif() {
 
     const categoryNumbers = [10, 11, 13, 14, 15, 17, 20, 21, 23, 27]
     const difficultyOptions = ["easy", "medium", "hard"]
-    console.log(randomButton)
     randomButton.addEventListener("click", function() {
         const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
         const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
@@ -352,7 +351,10 @@ function signUp(){
             })
         })
         .then(r => r.json())
-        .then(console.log)
+        .then(j => {
+            document.getElementById('id01').style.display="none"
+            document.getElementById('id01').querySelector('form').reset()
+        })
         .catch(console.log)
     })
 }
@@ -373,6 +375,7 @@ function switchToLogout() {
             currentUser = null
             currentSession = null
             catAndDif.innerHTML = ""
+            finalScoreParent.innerHTML = ""
         })
     })
 
@@ -415,6 +418,7 @@ function login(){
         .catch(e => {
             console.log(e)
             if (confirm("We don't recognize your credentials. Sign up?")) {
+                document.getElementById('id01-login').style.display="none"
                 signUp()
             }
         })
@@ -425,10 +429,9 @@ function login(){
 loginBtn.addEventListener('click', e => login())
 
 function initializeGames() {
-    console.log('clicked')
     fetch(GAMES_URL)
-  .then(response => response.json())
-  .then(gamesData => leaderBoardDisplay(gamesData));
+    .then(response => response.json())
+    .then(gamesData => leaderBoardDisplay(gamesData));
 }
 
 
@@ -439,7 +442,6 @@ initializeGame.addEventListener("click", initializeGames)
 
 function leaderBoardDisplay(playerObjectArray){
     const playerData = playerObjectArray
-    console.log(playerObjectArray)
     const modalOne = document.getElementById('id02')
     modalOne.style.display='initial'
     
@@ -467,7 +469,6 @@ leaderBoardTb = document.querySelector("#table-body")
 
 function allTimeHighScores(sortedPlayerArray) {
     sortedPlayerArray.forEach(playerObj => {
-        console.log(playerObj)
         
         const playerCard = document.createElement("tr")
         playerCard.className = "playerCard"
