@@ -49,17 +49,6 @@
           <audio autoplay defer center src="lib/audio/hq_trivia_ost_countdown_copy.mp3" loop></audio>
     </header>
     <main>
-      
-      <!-- Nav bar / login -->
-      <nav class="navbar navbar-inverse">
-          <div class="container-fluid">
-                
-                
-                <div class="session-container nav navbar-nav">
-                    
-                </div>
-            </div>
-        </nav>
 
       <!-- The Profile Modal -->
     <div id="profile" class="modal">
@@ -158,10 +147,39 @@
         </div>
 
         <div class="final">
-            <!-- <div class="countdown"> -->
-
-            </div>
+            
         </div>
+
+        <div id="id02" class="modal">
+            <!-- <span onclick="document.getElementById('id01').style.display='none'" 
+            class="close" title="Close Modal">&times;</span> -->
+            <div class="modal-content animate">
+                <h4 id="score-banner">All Time High Scores</h4>
+                <div id="difficulty-div">
+                    <button id="easy" name="difficulty" value="easy" type="button">Top Scores for Easy</button>
+                    <button id="medium" name="difficulty" value="medium" type="button">Top Scores for Medium</button>
+                    <button id="hard" name="difficulty" value="hard" type="button">Top Scores for Hard</button> 
+                </div> 
+                <table>
+                  <thead>
+                    <tr>
+                      <th>User Name</th>
+                      <th>Category</th>
+                      <th>Difficulty</th>
+                      <th>Points</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body">
+
+                </tbody> 
+                <button id="close window" onclick="document.getElementById('id02').style.display='none'" type="button">Close High Scores</button>
+            </div>
+           
+            
+            <!-- Modal Content -->
+            
+        </div>
+
         <script defer src="lib/moment/moment.min.js"></script>
     </main>
     <!-- Footer -->
