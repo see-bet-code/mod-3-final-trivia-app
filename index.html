@@ -26,7 +26,7 @@
                         <button class="navbar profile">Profile <span class="sr-only">(current)</span></navbar>
                     </li>
                     <li class="nav-item">
-                        <button class="navbar" >About</button>
+                        <button class="navbar scores" >Leaderboard</button>
                     </li>
                     <li class="nav-item active">
                         <button class="audio navbar" onclick="document.querySelector('audio').muted=!document.querySelector('audio').muted">(Un)mute audio</button>
@@ -138,70 +138,69 @@
             </div>
         </form>
     </div>
+    
 
-        <div class="cat-and-dif">
-            
-        </div>
-        
-        <div class="questions modal-content">  
-        </div>
-
-        <div class="final">
-            
-        </div>
-
-        <div id="id02" class="modal">
-            <!-- <span onclick="document.getElementById('id01').style.display='none'" 
-            class="close" title="Close Modal">&times;</span> -->
-            <div class="modal-content animate">
-                <h4 id="score-banner">All Time High Scores</h4>
-                <div id="difficulty-div">
-                    <button id="easy" name="difficulty" value="easy" type="button">Top Scores for Easy</button>
-                    <button id="medium" name="difficulty" value="medium" type="button">Top Scores for Medium</button>
-                    <button id="hard" name="difficulty" value="hard" type="button">Top Scores for Hard</button> 
-                </div> 
-                <table>
-                  <thead>
-                    <tr>
-                      <th>User Name</th>
-                      <th>Category</th>
-                      <th>Difficulty</th>
-                      <th>Points</th>
-                    </tr>
-                  </thead>
-                  <tbody id="table-body">
-
-                </tbody> 
-                <button id="close window" onclick="document.getElementById('id02').style.display='none'" type="button">Close High Scores</button>
-            </div>
-           
-            
-            <!-- Modal Content -->
-            
-        </div>
-
-        <script defer src="lib/moment/moment.min.js"></script>
     </main>
+    <div class="cat-and-dif">
+            
+    </div>
+    
+    <div class="questions modal-content">  
+    </div>
+
+    <div class="final">
+        
+    </div>
+
+    <script defer src="lib/moment/moment.min.js"></script>
     <!-- Footer -->
-<footer class="page-footer font-small unique-color-dark pt-4">
+    <footer class="page-footer font-small unique-color-dark pt-4">
 
-    <!-- Footer Elements -->
-    <div class="container">
+        <!-- Footer Elements -->
+        <div class="container">
 
-  
+    
+        </div>
+        <!-- Footer Elements -->
+    
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2020 Copyright:<br>
+            <a href="https://github.com/see-bet-code"> Brittani</a> +
+        <a href="https://github.com/gregaswright"> Greg</a><br><br>
+        <a href="https://github.com/see-bet-code/mod-3-final-trivia-app"> Frontend</a> //
+        <a href="https://github.com/see-bet-code/mod-3-final-trivia-app-backend"> Backend</a>
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
+
+    <div id="id02" class="modal">
+        <div class="modal-content animate">
+            <h4 id="score-banner">All Time High Scores</h4>
+            <div id="difficulty-div">
+                <button id="easy" name="difficulty" value="easy" type="button">Top Scores for Easy</button>
+                <button id="medium" name="difficulty" value="medium" type="button">Top Scores for Medium</button>
+                <button id="hard" name="difficulty" value="hard" type="button">Top Scores for Hard</button> 
+            </div> 
+            <table>
+              <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>Category</th>
+                  <th>Difficulty</th>
+                  <th>Points</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+
+            </tbody> 
+            </table>
+            <button id="close window" onclick="document.getElementById('id02').style.display='none'" type="button">Close High Scores</button>
+        </div>
+        <!-- Modal Content -->
+        
     </div>
-    <!-- Footer Elements -->
-  
-    <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">© 2020 Copyright:<br>
-        <a href="https://github.com/see-bet-code"> Brittani</a> +
-      <a href="https://github.com/gregaswright"> Greg</a><br><br>
-      <a href="https://github.com/see-bet-code/mod-3-final-trivia-app"> Frontend</a> //
-      <a href="https://github.com/see-bet-code/mod-3-final-trivia-app-backend"> Backend</a>
-    </div>
-    <!-- Copyright -->
-  
-  </footer>
-  <!-- Footer -->
+
 </body>
 </html>

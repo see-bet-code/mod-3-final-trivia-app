@@ -37,7 +37,7 @@ function initialize(categorySelection, difficultySelection) {
 
 // create function that renders form to main
 function renderCatAndDif() {
-    
+    console.log(catAndDif)
     catAndDif.innerHTML = `
         <h2>Select Category</h2>
         <form id="select-category" name="categoryFrom" class="select-form">
@@ -369,10 +369,9 @@ function switchToLogout() {
         .then(j => {
             document.querySelector('form.login-2').reset()
             loginBtn.style.display = "initial"
-            document.querySelector('button.logout').remove()
+            document.querySelector('button.logout').style.display = "none"
             currentUser = null
             currentSession = null
-            console.log(currentUser)
             catAndDif.remove()
         })
     })
@@ -426,6 +425,7 @@ function login(){
 loginBtn.addEventListener('click', e => login())
 
 function initializeGames() {
+    console.log('clicked')
     fetch(GAMES_URL)
   .then(response => response.json())
   .then(gamesData => leaderBoardDisplay(gamesData));
