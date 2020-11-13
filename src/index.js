@@ -15,8 +15,11 @@ let index = 0
 let questionNumber = 1
 let correctAnswerTally = 0
 
-const profile = document.createElement('p')
-profile.className = 'profile'
+const loginForm = document.querySelector('form.login')
+const finalScoreParent = document.querySelector(".final")
+// find parent for main
+const catAndDif = document.querySelector(".cat-and-dif")
+const questionParent = document.querySelector(".questions")
 
 fetch(API_CAT_URL)
     .then(response => response.json())
@@ -31,10 +34,8 @@ function initialize(categorySelection, difficultySelection) {
 
 
 
-// find parent for main
-const catAndDif = document.querySelector(".cat-and-dif")
+
 // create function that renders form to main
-// remove form after selection 
 function renderCatAndDif() {
     
     catAndDif.innerHTML = `
@@ -78,11 +79,10 @@ function renderCatAndDif() {
     const difficultyOptions = ["easy", "medium", "hard"]
 
     randomButton.addEventListener("click", function() {
-        // const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
-        // const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
-        // initialize(randomCategory, randomDifficulty)
-        // catAndDif.innerHTML = ""
-        renderProfile()
+        const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
+        const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
+        initialize(randomCategory, randomDifficulty)
+        catAndDif.innerHTML = ""
     })
 
     catAndDif.addEventListener("submit", submitForm)
@@ -109,11 +109,8 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
     }
-return array;
+    return array;
 }
-
-
-questionParent = document.querySelector(".questions")
 
 
 function capitalizeFirstLetter(string) {
@@ -254,7 +251,6 @@ function updateGamePoints(difficulty) {
     }
 }
 
-const finalScoreParent = document.querySelector(".final")
 function renderFinalScore() {
     finalScoreCard = document.createElement("span")
     finalScoreCard.className = "final-score-card"
@@ -269,6 +265,7 @@ function renderFinalScore() {
     const playAnother = document.querySelector(".play-another-button")
     playAnother.addEventListener('click', function() {
         finalScoreParent.innerHTML = ''
+        renderProfile()
         renderCatAndDif()
     })
     resetGame()
@@ -276,7 +273,6 @@ function renderFinalScore() {
 }
 
 function addToGameHistory(question) {
-    console.log(gamePoints)
     fetch (GAMES_URL, {
         method: 'post',
         headers: {
@@ -304,24 +300,20 @@ function resetGame() {
 
 // initialize()
 function renderProfile() {
+    const b = document.querySelector('button.profile')
+    b.addEventListener('click', e => document.getElementById('profile').style.display = "initial")
     fetch (`${USERS_URL}/${currentUser.id}`)
     .then(r => r.json())
     .then(user => {
-        let total = 0
-        let points = 0
-        if (user.games) {
-            total = user.games.length
-            var reducer = function add(acc, g) { return acc + g.points }
-            points = user.games.reduce(reducer, 0)
-        }
-        console.log(points)
+        var reducer = function add(acc, g) { return acc + g.points }
+        points = user.games.reduce(reducer, 0)
         loginForm.style.display = "none"
-        profile.textContent = ''
-        profile.textContent = `
-        Name: ${user.name}, Total Games played: ${total}, Lifetimepoints: ${points}
-        `
-        const sessionContainer = document.querySelector('div.session-container')
-        sessionContainer.append(profile)
+        document.querySelector('h4#name').innerHTML = user.name
+        document.querySelector('span#username').innerHTML = '@' + user.username
+        document.querySelector('span.total').innerHTML = user.games.length
+        document.querySelector('span.points').innerHTML = points
+        if (!user.avatUrl)
+            document.querySelector('img.rounded').src = user.avatarUrl
     })
     
 }
@@ -333,6 +325,7 @@ function signUp(){
     const signupForm = modal.querySelector('form')
     signupForm.addEventListener('submit', function(e) {
         e.preventDefault()
+        console.log(e.target.avatar.value)
         fetch (USERS_URL, {
             method: 'post',
             headers: {
@@ -345,12 +338,14 @@ function signUp(){
                     name: e.target.name.value,
                     username: e.target.username.value,
                     password: e.target.password.value,
-                    password_confirmation: e.target.passwordConfirmation.value
+                    password_confirmation: e.target.passwordConfirmation.value,
+                    avatar_url: e.target.avatar.value
                 } 
             })
         })
         .then(r => r.json())
         .then(console.log)
+        .catch(console.log)
     })
 }
 
@@ -358,7 +353,6 @@ function switchToLogout() {
     const logoutBtn = document.querySelector('button.logout')
     logoutBtn.style.display = "initial"
     logoutBtn.addEventListener('click', function(e) {
-        console.log('clicked')
         e.preventDefault()
         fetch(`${SESSIONS_URL}/${currentUser.id}`, {
             method: 'delete'
@@ -373,6 +367,7 @@ function switchToLogout() {
     })
 
 }
+
 function login(e){
     e.preventDefault()
     fetch (SESSIONS_URL, {
@@ -410,5 +405,4 @@ function login(e){
     })
 }
 
-const loginForm = document.querySelector('form.login')
 loginForm.addEventListener('submit', login)
