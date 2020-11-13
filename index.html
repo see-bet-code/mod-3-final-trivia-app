@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="full-height">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,68 +13,139 @@
 </head>
 <body>
     <header>
-        <h1> Welcome to Trivia App</h1>
-    </header>
-    <br> 
-    <main>
-      
-      <!-- Nav bar / login -->
-      <div class="topnav">
-            <a class="active" href="#home">Home</a>
-            <a class="scores" href="#about">About</a>
-            <div class="session-container">
-                <form class="login">
-                    <input type="text" placeholder="Username" name="username">
-                    <input type="password" placeholder="Password" name="password">
-                    <button type="submit">Login</button>
-                </form>
-                <button class="logout" style="display:none">Logout</button>
-        </div>
-      </div>
-        
-        <!-- The Modal -->
-        <div id="id01" class="modal">
-            <!-- <span onclick="document.getElementById('id01').style.display='none'" 
-            class="close" title="Close Modal">&times;</span> -->
-            <div class="modal-content animate">
-
+        <!-- <h1> Welcome to Trivia App</h1> -->
+        <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+            <a class="navbar-brand" href="#"><strong>TRVIA TRIVIA TRIVIA</strong></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <button class="navbar profile">Profile <span class="sr-only">(current)</span></navbar>
+                    </li>
+                    <li class="nav-item">
+                        <button class="navbar" >About</button>
+                    </li>
+                    <li class="nav-item active">
+                        <button class="audio navbar" onclick="document.querySelector('audio').muted=!document.querySelector('audio').muted">(Un)mute audio</button>
+                    </li>
+                    <li>
+                        <form class="login float:left">
+                            <button type="submit" class="navbar mr-2 login-nav">Login</button>
+                        </form>
+                        <button class="logout navbar" style="display:none">Logout</button>
+                    </li>
+                </ul>
             </div>
-            <!-- Modal Content -->
-            <form class="modal-content animate" >
-                <div class="imgcontainer">
-                    <!-- <img src="img_avatar2.png" alt="Avatar" class="avatar"> -->
+        </nav>
+        <div class="view intro-2" style="">
+            <div class="full-bg-img">
+              <div class="mask rgba-purple-light flex-center">
+              </div>
+            </div>
+          </div>
+          <audio autoplay defer center src="lib/audio/hq_trivia_ost_countdown_copy.mp3" loop></audio>
+    </header>
+    <main>
+
+      <!-- The Profile Modal -->
+    <div id="profile" class="modal">
+
+        <!-- Modal Content -->
+        <form class="modal-content animate" >
+            <div class="container mt-1 d-flex justify-content-center">
+                <div class="card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="image"> <img src="https://static1.squarespace.com/static/54b7b93ce4b0a3e130d5d232/54e20ebce4b014cdbc3fd71b/5a992947e2c48320418ae5e0/1519987239570/icon.png?format=1500w" class="rounded" width="155"> </div>
+                        <div class="ml-3 w-200">
+                            <h4 class="mb-0 mt-0" id="name"></h4> <span id="username"></span>
+                            <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                                <div class="d-flex flex-column"> <span class="games">Total Games</span> <span class="total align-items-center"></span> </div>
+                                <div class="d-flex flex-column"> <span class="lifetime">Lifetime Points</span> <span class="points align-items-center"></span> </div>
+                            </div>
+                            <div class="button mt-2 d-flex flex-row align-items-center">
+                                <button class="btn btn-sm btn-outline-primary w-100">Delete Account</button>
+                                <button class="btn btn-sm btn-primary w-100 ml-2" onclick="document.getElementById('profile').style.display='none'">Close</button> </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="container">
-                    <label for="name"><b>Name</b></label>
-                    <input type="text" placeholder="Enter Name" name="name" required>
+            <!-- <button type="button"  class="closebtn">Close</button> -->
+            </div>
+        </form>
+    </div>
 
-                    <label for="username"><b>Username</b></label>
-                    <input type="text" placeholder="Enter Username" name="username" required>
+        
+    <!-- The Modal -->
+    <div id="id01" class="modal">
+        <!-- <span onclick="document.getElementById('id01').style.display='none'" 
+        class="close" title="Close Modal">&times;</span> -->
 
-                    <label for="password"><b>Password</b></label>
-                    <input type="password" placeholder="Enter Password" name="password" required>
+        <!-- Modal Content -->
+        <form class="modal-content animate" >
+            <div class="image">
+                <img src="" alt="Temp logo" class="rounded" width="155">
+            </div>
 
-                    <label for="passwordConfirmation"><b>Confirm Password</b></label>
-                    <input type="password" placeholder="Re-enter Password" name="passwordConfirmation" required>
+                <label for="name"><b>Name</b></label>
+                <input type="text" placeholder="Enter Name" name="name" required>
 
-                    <button type="submit">Signup</button>
-                </div>
+                <label for="username"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" required>
 
-                <div class="container" style="background-color:#f1f1f1">
-                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-                <span class="psw">Forgot <a href="#">password?</a></span>
-                </div>
-            </form>
-        </div>
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+
+                <label for="passwordConfirmation"><b>Confirm Password</b></label>
+                <input type="password" placeholder="Re-enter Password" name="passwordConfirmation" required>
+
+                <label for="avatar"><b>Choose a profile picture</b></label>
+                <input type="link" name="avatar">
+
+                <button type="submit" class="btn btn-sm btn-outline-primary w-100">Signup</button>
+
+            <!-- <div class="container" style="background-color:#f1f1f1"> -->
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn btn btn-sm btn-outline-primary w-100">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
+    </div>
+
+    <!-- The Modal -->
+    <div id="id01-login" class="modal">
+        <!-- <span onclick="document.getElementById('id01').style.display='none'" 
+        class="close" title="Close Modal">&times;</span> -->
+
+        <!-- Modal Content -->
+        <form class="modal-content animate login-2" >
+            <div class="image">
+                <img src="https://www.iconpacks.net/icons/1/free-user-login-icon-305-thumb.png" alt="Temp logo" class="rounded" width="155" centered>
+            </div>
+
+                <label for="username"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" required>
+
+                <label for="password"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+
+                <button type="submit" class="btn btn-sm btn-outline-primary w-100">Login</button>
+
+            <button type="button" onclick="document.getElementById('id01-login').style.display='none'" class="cancelbtn btn btn-sm btn-outline-primary w-100">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
+    </div>
 
         <div class="cat-and-dif">
             
         </div>
         
-        <div class="questions">  
+        <div class="questions modal-content">  
         </div>
-  
+
         <div class="final">
             
         </div>
@@ -111,6 +182,26 @@
 
         <script defer src="lib/moment/moment.min.js"></script>
     </main>
-    
+    <!-- Footer -->
+<footer class="page-footer font-small unique-color-dark pt-4">
+
+    <!-- Footer Elements -->
+    <div class="container">
+
+  
+    </div>
+    <!-- Footer Elements -->
+  
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2020 Copyright:<br>
+        <a href="https://github.com/see-bet-code"> Brittani</a> +
+      <a href="https://github.com/gregaswright"> Greg</a><br><br>
+      <a href="https://github.com/see-bet-code/mod-3-final-trivia-app"> Frontend</a> //
+      <a href="https://github.com/see-bet-code/mod-3-final-trivia-app-backend"> Backend</a>
+    </div>
+    <!-- Copyright -->
+  
+  </footer>
+  <!-- Footer -->
 </body>
 </html>

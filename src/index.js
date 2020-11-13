@@ -15,8 +15,11 @@ let index = 0
 let questionNumber = 1
 let correctAnswerTally = 0
 
-const profile = document.createElement('p')
-profile.className = 'profile'
+const loginBtn = document.querySelector('button.login-nav')
+const finalScoreParent = document.querySelector(".final")
+// find parent for main
+const catAndDif = document.querySelector(".cat-and-dif")
+const questionParent = document.querySelector(".questions")
 
 fetch(API_CAT_URL)
     .then(response => response.json())
@@ -31,15 +34,13 @@ function initialize(categorySelection, difficultySelection) {
 
 
 
-// find parent for main
-const catAndDif = document.querySelector(".cat-and-dif")
+
 // create function that renders form to main
-// remove form after selection 
 function renderCatAndDif() {
     
     catAndDif.innerHTML = `
         <h2>Select Category</h2>
-        <form id="select-category" name="categoryFrom" >
+        <form id="select-category" name="categoryFrom" class="select-form">
             <input type="radio" id="books" name="category" value=10 required checked>
             <label for="books">Books</label>
             <input type="radio" id="film" name="category" value=11>
@@ -68,9 +69,9 @@ function renderCatAndDif() {
             <label for="medium">Medium</label>
             <input type="radio" id="hard" name="difficulty" value="hard">
             <label for="hard">Hard</label><br><br>
-            <button class="cat-dif-button" >Start Round</button> 
+            <button class="cat-dif-button btn btn-outline-primary" >Start Round</button> 
         </form><br>
-        <button class="random-button" >Random Category and Difficulty</button> 
+        <button class="random-button btn btn-outline-secondary" >Random Category and Difficulty</button> 
     `
     const randomButton = document.querySelector(".random-button")
 
@@ -78,11 +79,10 @@ function renderCatAndDif() {
     const difficultyOptions = ["easy", "medium", "hard"]
 
     randomButton.addEventListener("click", function() {
-        // const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
-        // const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
-        // initialize(randomCategory, randomDifficulty)
-        // catAndDif.innerHTML = ""
-        renderProfile()
+        const randomCategory = categoryNumbers[Math.floor(Math.random()*categoryNumbers.length)];
+        const randomDifficulty = difficultyOptions[Math.floor(Math.random()*difficultyOptions.length)];
+        initialize(randomCategory, randomDifficulty)
+        catAndDif.innerHTML = ""
     })
 
     catAndDif.addEventListener("submit", submitForm)
@@ -109,11 +109,8 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
     }
-return array;
+    return array;
 }
-
-
-questionParent = document.querySelector(".questions")
 
 
 function capitalizeFirstLetter(string) {
@@ -121,16 +118,17 @@ function capitalizeFirstLetter(string) {
 }
 
 function questionDataToObj(questionData) {
-    console.log(moment.duration())
     questionParent.innerHTML = ''
+    // questionParent.style.display = "initial"
     const question = questionData.results[index]
-    const questionCard = document.createElement("span")
-    questionCard.className = "question-card"
-    questionCard.innerHTML = `
-    <h3>Question ${questionNumber} for ${question.category} on ${capitalizeFirstLetter(question.difficulty)} Difficulty</h3>
-    <h3>${question.question}</h3>
-    <form class="answers-form">
-    </form>
+    questionParent.innerHTML =  `
+        <div class="modal-header">
+            <h3><span class="label label-warning" id="qid">${questionNumber}</span>${question.question}</h3>
+            <h4>
+                Category: <span class="label label-warning" id="qid-c">${question.category}</span><br>
+                Difficulty: <span class="label label-warning" id="qid-d">${capitalizeFirstLetter(question.difficulty)}</span>
+            </h4>
+        </div>
     `
     
     // Pushing all the answers into a new array in order to randomize them.
@@ -141,33 +139,37 @@ function questionDataToObj(questionData) {
     answersArray.push(question.correct_answer)
     shuffledAnswerArray = shuffle(answersArray)
     
-    questionParent.append(questionCard)
-    const answersForm = document.querySelector(".answers-form")
+    const answersForm = document.createElement("form")
+    answersForm.className= 'answers-form'
+    questionParent.append(answersForm)
     answersForm.innerHTML = `
-        <label class="btn btn-outline-primary">
+        <div class="countdown"></div>
+        <label class="btn btn-outline-primary element-animation0">
             <input type="radio" name="answer" value="${shuffledAnswerArray[0]}" required>${shuffledAnswerArray[0]}
         </label>
-        <label class="btn btn-outline-primary">
+        <label class="btn btn-outline-primary element-animation1">
             <input type="radio" name="answer" value="${shuffledAnswerArray[1]}">${shuffledAnswerArray[1]}
         </label>
-        <label class="btn btn-outline-primary">
+        <label class="btn btn-outline-primary element-animation2">
             <input type="radio" name="answer" value="${shuffledAnswerArray[2]}">${shuffledAnswerArray[2]}
         </label>
-        <label class="btn btn-outline-primary">
+        <label class="btn btn-outline-primary element-animation3">
             <input type="radio" name="answer" value="${shuffledAnswerArray[3]}">${shuffledAnswerArray[3]}
         </label>
-        <div class="countdown"></div>
+        <br>
     `
     const submitBtn = document.createElement('button')
+    submitBtn.classList.add("btn", "btn-secondary", "submit-btn")
     submitBtn.type = 'submit'
+    submitBtn.textContent = 'Next'
     if (index === 9) {
         submitBtn.textContent = 'Last question!'
-    } else {
-        submitBtn.textContent = 'Next'
     }
     
     answersForm.append(submitBtn)
     answersForm.addEventListener('submit', function(e) {
+        console.log('click')
+        console.log(e.target.answer.value)
         clearInterval(timer)
         gameCycle(e, question, questionData)
     })
@@ -210,7 +212,6 @@ function questionDataToObj(questionData) {
                 index++
                 questionNumber++
                 questionDataToObj(questionData)
-                console.log(questionNumber)
             }
         
         }, 1000);
@@ -254,7 +255,6 @@ function updateGamePoints(difficulty) {
     }
 }
 
-const finalScoreParent = document.querySelector(".final")
 function renderFinalScore() {
     finalScoreCard = document.createElement("span")
     finalScoreCard.className = "final-score-card"
@@ -263,12 +263,13 @@ function renderFinalScore() {
     <h2>Let's See How You Did.</h2>
     <h3>Looks like you got ${correctAnswerTally}/10 of the questions correct</h3>
     <h3>You've received ${gamePoints} for the Game</h3>
-    <button class="play-another-button" >Play Another Game of Trivia</button>
+    <button class="play-another-button btn btn-outline-secondary" >Play Another Game of Trivia</button>
     `
     finalScoreParent.append(finalScoreCard)
     const playAnother = document.querySelector(".play-another-button")
     playAnother.addEventListener('click', function() {
         finalScoreParent.innerHTML = ''
+        renderProfile()
         renderCatAndDif()
     })
     resetGame()
@@ -276,7 +277,6 @@ function renderFinalScore() {
 }
 
 function addToGameHistory(question) {
-    console.log(gamePoints)
     fetch (GAMES_URL, {
         method: 'post',
         headers: {
@@ -303,25 +303,25 @@ function resetGame() {
 }
 
 // initialize()
+
 function renderProfile() {
-    fetch (`${USERS_URL}/${currentUser.id}`)
-    .then(r => r.json())
-    .then(user => {
-        let total = 0
-        let points = 0
-        if (user.games) {
-            total = user.games.length
-            var reducer = function add(acc, g) { return acc + g.points }
-            points = user.games.reduce(reducer, 0)
-        }
-        console.log(points)
-        loginForm.style.display = "none"
-        profile.textContent = ''
-        profile.textContent = `
-        Name: ${user.name}, Total Games played: ${total}, Lifetimepoints: ${points}
-        `
-        const sessionContainer = document.querySelector('div.session-container')
-        sessionContainer.append(profile)
+        const b = document.querySelector('button.profile')
+        b.addEventListener('click', e => {
+            if (currentUser) {
+                document.getElementById('profile').style.display = "initial"
+            }
+        })
+        fetch (`${USERS_URL}/${currentUser.id}`)
+        .then(r => r.json())
+        .then(user => {
+        var reducer = function add(acc, g) { return acc + g.points }
+        points = user.games.reduce(reducer, 0)
+        document.querySelector('h4#name').innerHTML = user.name
+        document.querySelector('span#username').innerHTML = '@' + user.username
+        document.querySelector('span.total').innerHTML = user.games.length
+        document.querySelector('span.points').innerHTML = points
+        if (!user.avatUrl)
+            document.querySelector('img.rounded').src = user.avatarUrl
     })
     
 }
@@ -333,6 +333,7 @@ function signUp(){
     const signupForm = modal.querySelector('form')
     signupForm.addEventListener('submit', function(e) {
         e.preventDefault()
+        console.log(e.target.avatar.value)
         fetch (USERS_URL, {
             method: 'post',
             headers: {
@@ -345,12 +346,14 @@ function signUp(){
                     name: e.target.name.value,
                     username: e.target.username.value,
                     password: e.target.password.value,
-                    password_confirmation: e.target.passwordConfirmation.value
+                    password_confirmation: e.target.passwordConfirmation.value,
+                    avatar_url: e.target.avatar.value
                 } 
             })
         })
         .then(r => r.json())
         .then(console.log)
+        .catch(console.log)
     })
 }
 
@@ -358,60 +361,69 @@ function switchToLogout() {
     const logoutBtn = document.querySelector('button.logout')
     logoutBtn.style.display = "initial"
     logoutBtn.addEventListener('click', function(e) {
-        console.log('clicked')
         e.preventDefault()
         fetch(`${SESSIONS_URL}/${currentUser.id}`, {
             method: 'delete'
         })
         .then(r => r.json())
         .then(j => {
-            loginForm.reset()
-            loginForm.style.display = "initial"
+            document.querySelector('form.login-2').reset()
+            loginBtn.style.display = "initial"
             document.querySelector('button.logout').remove()
-            document.querySelector('p.profile').remove()
+            currentUser = null
+            currentSession = null
+            console.log(currentUser)
+            catAndDif.remove()
         })
     })
 
 }
-function login(e){
-    e.preventDefault()
-    fetch (SESSIONS_URL, {
-        method: 'post',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        credentials: 'same-origin',
-        body: JSON.stringify( {
-            user: {
-                username: e.target.username.value,
-                password: e.target.password.value
+
+function login(){
+    const modal = document.getElementById('id01-login')
+    modal.style.display='initial'
+    const loginForm = modal.querySelector('form')
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault()
+        fetch (SESSIONS_URL, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify( {
+                user: {
+                    username: e.target.username.value,
+                    password: e.target.password.value
+                } 
+            })
+        })
+        .then(r => r.json())
+        .then(function(o) {
+            if (o.status === 401) {
+                throw Error(o.message)
+            } else {
+                currentUser = o.user
+                currentSession = o
+                renderProfile()
+                switchToLogout()
+                renderCatAndDif()
+                document.getElementById('id01-login').style.display = "none"
+                loginBtn.style.display="none"
             } 
         })
-    })
-    .then(r => r.json())
-    .then(function(o) {
-        if (o.status === 401) {
-            throw Error(o.message)
-        } else {
-            currentUser = o.user
-            currentSession = o
-            renderProfile()
-            switchToLogout()
-            renderCatAndDif()
-    
-        } 
-    })
-    .catch(e => {
-        console.log(e)
-        if (confirm("We don't recognize your credentials. Sign up?")) {
-            signUp()
-        }
+        .catch(e => {
+            console.log(e)
+            if (confirm("We don't recognize your credentials. Sign up?")) {
+                signUp()
+            }
+        })
     })
 }
 
-const loginForm = document.querySelector('form.login')
-loginForm.addEventListener('submit', login)
+
+loginBtn.addEventListener('click', e => login())
 
 function initializeGames() {
     fetch(GAMES_URL)
@@ -536,4 +548,3 @@ function allTimeHighScores(sortedPlayerArray) {
         });
     }
 }
-
